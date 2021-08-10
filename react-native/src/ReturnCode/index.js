@@ -22,15 +22,15 @@ export class ReturnCode {
     return this.#value;
   }
 
-  isSuccess() {
+  isValueSuccess() {
     return (this.#value === ReturnCode.SUCCESS);
   }
 
-  isError() {
+  isValueError() {
     return ((this.#value !== ReturnCode.SUCCESS) && (this.#value !== ReturnCode.CANCEL));
   }
 
-  isCancel() {
+  isValueCancel() {
     return (this.#value === ReturnCode.CANCEL);
   }
 

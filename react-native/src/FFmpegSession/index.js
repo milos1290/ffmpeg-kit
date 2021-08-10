@@ -29,16 +29,18 @@ export class FFmpegSession extends AbstractSession {
     return FFmpegKitFactory.getStatisticsCallback(this.getSessionId());
   }
 
-  getAllStatistics(waitTimeout) {
-    return FFmpegKitReactNativeModule.ffmpegSessionGetAllStatistics(this.getSessionId(), FFmpegKitFactory.optionalNumericParameter(waitTimeout)).map(FFmpegKitFactory.mapToStatistics);
+  async getAllStatistics(waitTimeout) {
+    const allStatistics = await FFmpegKitReactNativeModule.ffmpegSessionGetAllStatistics(this.getSessionId(), FFmpegKitFactory.optionalNumericParameter(waitTimeout));
+    return allStatistics.map(FFmpegKitFactory.mapToStatistics);
   }
 
-  getStatistics() {
-    return FFmpegKitReactNativeModule.ffmpegSessionGetStatistics(this.getSessionId()).map(FFmpegKitFactory.mapToStatistics);
+  async getStatistics() {
+    const statistics = await FFmpegKitReactNativeModule.ffmpegSessionGetStatistics(this.getSessionId());
+    return statistics.map(FFmpegKitFactory.mapToStatistics);
   }
 
-  getLastReceivedStatistics() {
-    let statistics = this.getStatistics();
+  async getLastReceivedStatistics() {
+    let statistics = await this.getStatistics();
 
     if (statistics.length > 0) {
       return statistics[0];

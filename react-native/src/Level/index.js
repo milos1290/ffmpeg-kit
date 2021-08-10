@@ -61,7 +61,7 @@ export class Level {
    * @param level log level integer
    * @returns log level string
    */
-  static logLevelToString(level) {
+  static levelToString(level) {
     switch (level) {
       case Level.AV_LOG_TRACE:
         return "TRACE";

@@ -58,7 +58,7 @@ declare module 'ffmpeg-kit-react-native' {
 
     isFFprobe(): boolean;
 
-    cancel(): void;
+    cancel(): Promise<void>;
 
   }
 
@@ -178,7 +178,7 @@ declare module 'ffmpeg-kit-react-native' {
 
     constructor();
 
-    static create(argumentsArray: Array<string>, logRedirectionStrategy?: LogRedirectionStrategy): Promise<FFmpegSession>;
+    static create(argumentsArray: Array<string>, executeCallback?: ExecuteCallback, logCallback?: LogCallback, statisticsCallback?: StatisticsCallback, logRedirectionStrategy?: LogRedirectionStrategy): Promise<FFmpegSession>;
 
     static fromMap(sessionMap: { [key: string]: any }): FFmpegSession;
 
@@ -216,7 +216,7 @@ declare module 'ffmpeg-kit-react-native' {
 
     constructor();
 
-    static create(argumentsArray: Array<string>, logRedirectionStrategy?: LogRedirectionStrategy): Promise<FFprobeSession>;
+    static create(argumentsArray: Array<string>, executeCallback?: ExecuteCallback, logCallback?: LogCallback, logRedirectionStrategy?: LogRedirectionStrategy): Promise<FFprobeSession>;
 
     static fromMap(sessionMap: { [key: string]: any }): FFprobeSession;
 
@@ -238,7 +238,7 @@ declare module 'ffmpeg-kit-react-native' {
     static readonly AV_LOG_DEBUG: number;
     static readonly AV_LOG_TRACE: number;
 
-    static logLevelToString(number: number): string;
+    static levelToString(number: number): string;
   }
 
   export class Log {
@@ -283,7 +283,7 @@ declare module 'ffmpeg-kit-react-native' {
 
     getLongFormat(): string;
 
-    getDuration(): string;
+    getDuration(): number;
 
     getStartTime(): string;
 
@@ -319,7 +319,7 @@ declare module 'ffmpeg-kit-react-native' {
 
     constructor();
 
-    static create(argumentsArray: Array<string>): Promise<MediaInformationSession>;
+    static create(argumentsArray: Array<string>, executeCallback?: ExecuteCallback, logCallback?: LogCallback): Promise<MediaInformationSession>;
 
     static fromMap(sessionMap: { [key: string]: any }): MediaInformationSession;
 
@@ -343,11 +343,11 @@ declare module 'ffmpeg-kit-react-native' {
 
     getValue(): number;
 
-    isSuccess(): boolean;
+    isValueSuccess(): boolean;
 
-    isError(): boolean;
+    isValueError(): boolean;
 
-    isCancel(): boolean;
+    isValueCancel(): boolean;
 
   }
 
@@ -395,7 +395,7 @@ declare module 'ffmpeg-kit-react-native' {
 
     isFFprobe(): boolean;
 
-    cancel(): void;
+    cancel(): Promise<void>;
 
   }
 

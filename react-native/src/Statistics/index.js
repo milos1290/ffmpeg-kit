@@ -48,7 +48,7 @@ export class Statistics {
   }
 
   setVideoQuality(videoQuality) {
-    return this.#videoQuality = videoQuality;
+    this.#videoQuality = videoQuality;
   }
 
   getSize() {

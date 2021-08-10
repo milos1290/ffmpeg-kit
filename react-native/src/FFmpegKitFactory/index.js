@@ -65,7 +65,7 @@ export class FFmpegKitFactory {
   }
 
   static setLogRedirectionStrategy(sessionId, logRedirectionStrategy) {
-    return logRedirectionStrategyMap.set(sessionId, logRedirectionStrategy);
+    logRedirectionStrategyMap.set(sessionId, logRedirectionStrategy);
   }
 
   static getLogCallback(sessionId) {

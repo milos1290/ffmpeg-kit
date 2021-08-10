@@ -252,6 +252,11 @@ export class AbstractSession extends Session {
   }
 
   cancel() {
+    if (sessionId === undefined) {
+      return FFmpegKitReactNativeModule.cancel();
+    } else {
+      return FFmpegKitReactNativeModule.cancelSession(sessionId);
+    }
   }
 
 }

@@ -137,7 +137,7 @@ export class FFmpegKitConfig {
   }
 
   static setLogRedirectionStrategy(logRedirectionStrategy) {
-    return this.#globalLogRedirectionStrategy = logRedirectionStrategy;
+    this.#globalLogRedirectionStrategy = logRedirectionStrategy;
   }
 
   static async messagesInTransmit(sessionId) {

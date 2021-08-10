@@ -16,24 +16,6 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with FFmpegKit.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * Copyright (c) 2021 Taner Sener
- *
- * This file is part of FFmpegKit.
- *
- * FFmpegKit is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * FFmpegKit is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with FFmpegKit.  If not, see <http://www.gnu.org/licenses/>.
- */
 
 package com.arthenica.ffmpegkit.reactnative;
 
@@ -92,7 +74,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FFmpegKitReactNativeModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
@@ -248,7 +230,7 @@ public class FFmpegKitReactNativeModule extends ReactContextBaseJavaModule imple
           timeout = AbstractSession.DEFAULT_TIMEOUT_FOR_ASYNCHRONOUS_MESSAGES_IN_TRANSMIT;
         }
         final List<com.arthenica.ffmpegkit.Log> allLogs = session.getAllLogs(timeout);
-        promise.resolve(allLogs.stream().map(FFmpegKitReactNativeModule::toMap).collect(Collectors.toList()));
+        promise.resolve(toArray(allLogs.stream().map(FFmpegKitReactNativeModule::toMap)));
       }
     } else {
       promise.reject("INVALID_SESSION", "Invalid session id.");
@@ -263,7 +245,7 @@ public class FFmpegKitReactNativeModule extends ReactContextBaseJavaModule imple
         promise.reject("SESSION_NOT_FOUND", "Session not found.");
       } else {
         final List<com.arthenica.ffmpegkit.Log> allLogs = session.getLogs();
-        promise.resolve(allLogs.stream().map(FFmpegKitReactNativeModule::toMap).collect(Collectors.toList()));
+        promise.resolve(toArray(allLogs.stream().map(FFmpegKitReactNativeModule::toMap)));
       }
     } else {
       promise.reject("INVALID_SESSION", "Invalid session id.");
@@ -383,7 +365,7 @@ public class FFmpegKitReactNativeModule extends ReactContextBaseJavaModule imple
             timeout = AbstractSession.DEFAULT_TIMEOUT_FOR_ASYNCHRONOUS_MESSAGES_IN_TRANSMIT;
           }
           final List<Statistics> allStatistics = ((FFmpegSession) session).getAllStatistics(timeout);
-          promise.resolve(allStatistics.stream().map(FFmpegKitReactNativeModule::toMap).collect(Collectors.toList()));
+          promise.resolve(toArray(allStatistics.stream().map(FFmpegKitReactNativeModule::toMap)));
         } else {
           promise.reject("NOT_FFMPEG_SESSION", "A session is found but it does not have the correct type.");
         }
@@ -402,7 +384,7 @@ public class FFmpegKitReactNativeModule extends ReactContextBaseJavaModule imple
       } else {
         if (session instanceof FFmpegSession) {
           final List<Statistics> statistics = ((FFmpegSession) session).getStatistics();
-          promise.resolve(statistics.stream().map(FFmpegKitReactNativeModule::toMap).collect(Collectors.toList()));
+          promise.resolve(toArray(statistics.stream().map(FFmpegKitReactNativeModule::toMap)));
         } else {
           promise.reject("NOT_FFMPEG_SESSION", "A session is found but it does not have the correct type.");
         }
@@ -439,7 +421,7 @@ public class FFmpegKitReactNativeModule extends ReactContextBaseJavaModule imple
       promise.resolve(toMap(mediaInformation));
     } catch (JSONException e) {
       Log.i(LIBRARY_NAME, "Parsing MediaInformation failed.", e);
-      promise.reject(e);
+      promise.resolve(null);
     }
   }
 
@@ -826,9 +808,11 @@ public class FFmpegKitReactNativeModule extends ReactContextBaseJavaModule imple
         }
       } else {
         Log.w(LIBRARY_NAME, String.format("Cannot selectDocument using parameters writable: %s, type: %s, title: %s and extra types: %s. Current activity is null.", writable, type, title, extraTypes == null ? null : Arrays.toString(toArgumentsArray(extraTypes))));
+        promise.reject("INVALID_ACTIVITY", "Activity is null.");
       }
     } else {
       Log.w(LIBRARY_NAME, String.format("Cannot selectDocument using parameters writable: %s, type: %s, title: %s and extra types: %s. React context is null.", writable, type, title, extraTypes == null ? null : Arrays.toString(toArgumentsArray(extraTypes))));
+      promise.reject("INVALID_CONTEXT", "Context is null.");
     }
   }
 
@@ -1099,6 +1083,14 @@ public class FFmpegKitReactNativeModule extends ReactContextBaseJavaModule imple
     }
 
     return map;
+  }
+
+  protected static WritableArray toArray(final Stream<WritableMap> stream) {
+    final WritableArray list = Arguments.createArray();
+
+    stream.forEachOrdered(list::pushMap);
+
+    return list;
   }
 
   protected static WritableArray toList(final JSONArray array) {

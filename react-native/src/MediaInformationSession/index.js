@@ -28,7 +28,7 @@ export class MediaInformationSession extends FFprobeSession {
   }
 
   setMediaInformation(mediaInformation) {
-    return this.#mediaInformation = mediaInformation;
+    this.#mediaInformation = mediaInformation;
   }
 
 }
