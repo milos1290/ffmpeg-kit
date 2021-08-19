@@ -314,6 +314,8 @@ if [[ -n ${FFMPEG_KIT_LTS_BUILD} ]] && [[ ${API} -lt 18 ]]; then
 fi
 
 # ALWAYS BUILD SHARED LIBRARIES
+# --enable-static \
+# --disable-shared \
 BUILD_LIBRARY_OPTIONS="--disable-static --enable-shared"
 
 # OPTIMIZE FOR SPEED INSTEAD OF SIZE
